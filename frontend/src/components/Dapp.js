@@ -6,6 +6,8 @@ import { ethers } from "ethers";
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
 import TokenArtifact from "../contracts/Token.json";
+import ManagerArtifact from "../contracts/Manager.json";
+import EntityArtifact from "../contracts/EntityContract.json";
 import contractAddress from "../contracts/contract-address.json";
 
 // All the logic of this dapp is contained in the Dapp component.
@@ -54,6 +56,9 @@ export class Dapp extends React.Component {
       txBeingSent: undefined,
       transactionError: undefined,
       networkError: undefined,
+      managerData: undefined,
+      entity: undefined,
+      entityData: undefined,
     };
 
     this.state = this.initialState;
@@ -95,14 +100,15 @@ export class Dapp extends React.Component {
         <div className="row">
           <div className="col-12">
             <h1>
-              {this.state.tokenData.name} ({this.state.tokenData.symbol})
+              ALPS Dapp v2
             </h1>
             <p>
-              Welcome <b>{this.state.selectedAddress}</b>, you have{" "}
-              <b>
-                {this.state.balance.toString()} {this.state.tokenData.symbol}
-              </b>
-              .
+              Address: <b>{this.state.selectedAddress}</b>
+            </p>
+            <p>
+            Entity {this.state.entity}
+            {/* Entityv1: {this.state.entityData[0]}
+            ENtityv2: {this.state.entityData[1]} */}
             </p>
           </div>
         </div>
@@ -221,6 +227,9 @@ export class Dapp extends React.Component {
     // sample project, but you can reuse the same initialization pattern.
     this._initializeEthers();
     this._getTokenData();
+    this._getManagerData();
+    this._getEntityData();
+    this._getEntityArrData();
     this._startPollingData();
   }
 
@@ -235,6 +244,29 @@ export class Dapp extends React.Component {
       TokenArtifact.abi,
       this._provider.getSigner(0)
     );
+
+    this._manager = new ethers.Contract(
+      contractAddress.Manager,
+      ManagerArtifact.abi,
+      this._provider.getSigner(0)
+    );
+
+    this._entity = new ethers.Contract(
+      contractAddress.Entity[0],
+      EntityArtifact.abi,
+      this._provider.getSigner(0)
+    );
+    console.log("token", this._token);
+    console.log("entit", this._entity);
+
+    this._entityArr = new Array();
+    for (const _address of contractAddress.Entity) {
+      this._entityArr.push(new ethers.Contract(
+        _address,
+        EntityArtifact.abi,
+        this._provider.getSigner(0)
+      ));
+    }
   }
 
   // The next two methods are needed to start and stop polling data. While
@@ -246,6 +278,7 @@ export class Dapp extends React.Component {
   // initialize the app, as we do with the token data.
   _startPollingData() {
     this._pollDataInterval = setInterval(() => this._updateBalance(), 1000);
+    this._pollDataIntervalTest = setInterval(() => this._updateEntityData(), 1000);
 
     // We run it once immediately so we don't have to wait for it
     this._updateBalance();
@@ -259,15 +292,47 @@ export class Dapp extends React.Component {
   // The next two methods just read from the contract and store the results
   // in the component state.
   async _getTokenData() {
+    console.log("mana", this._manager);
     const name = await this._token.name();
     const symbol = await this._token.symbol();
 
     this.setState({ tokenData: { name, symbol } });
   }
 
+  async _getManagerData() {
+    // const licensee = await this._manager.getLicensee();
+    // const licensor = await this._manager.getLicensor();
+    // const creationDate = await this._manager.isActive();
+
+    // this.setState({managerData: {licensee, licensor, creationDate}});
+  }
+
+  async _getEntityData() {
+    console.log("ENTITY ARRAY ", this._entityArr);
+    const name = await this._entity.name();
+    this.setState({entity: name});
+  }
+
+  async _getEntityArrData() {
+    let _entityData = [];
+    for (const enitityContr of this._entityArr) {
+      let _name = await this._entity.name();
+      _entityData.push({address: enitityContr.address, name:_name});
+    }
+    console.log("aux array:", _entityData);
+    this.setState({entityData: [..._entityData]});
+  }
+
+
+
   async _updateBalance() {
     const balance = await this._token.balanceOf(this.state.selectedAddress);
     this.setState({ balance });
+  }
+  
+  async _updateEntityData() {
+    const name = await this._entity.name();
+    this.setState({entity: name});
   }
 
   // This method sends an ethereum transaction to transfer tokens.
