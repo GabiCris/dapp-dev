@@ -13,9 +13,9 @@ interface Manager {
     // uint arr n*3 [(timestamp, royalty, boolean)]
     function getRoyaltyHistoryLegacyDapp() external returns (uint256[] memory);
 
-    function getLicensee() external returns (address);
-    function getLicensor() external returns (address);
-    function isActive() external returns (bool);
+    function getLicensee() external view returns (address);
+    function getLicensor() external view returns (address);
+    function isActive() external view returns (bool);
 
 }
 
@@ -83,7 +83,7 @@ contract ManagerContract is Manager, Ownable {
         active = false;
     }
 
-    function getLicensee() external override returns (address) {
+    function getLicensee() external override view returns (address) {
         return licensee;
     }
 
@@ -91,11 +91,11 @@ contract ManagerContract is Manager, Ownable {
         licensee = _licensee;
     }
 
-    function getLicensor() external override returns (address) {
+    function getLicensor() external override view returns (address) {
         return licensor;
     }
 
-    function isActive() external override returns (bool) {
+    function isActive() external override view returns (bool) {
         return active;
     }
 }

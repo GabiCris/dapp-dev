@@ -22,22 +22,23 @@ async function main() {
 
     console.log("Account balance:", (await deployer.getBalance()).toString());
     const testAdr = "0xe7f1725e7734ce288f8367e1bb143e90bb3f0512";
+    const testAdr2 = "0x8626f6940e2eb28930efb4cef49b2d1f2c9c1199";
     const Token = await ethers.getContractFactory("Token");
     const token = await Token.deploy();
     await token.deployed();
 
     const Manager = await ethers.getContractFactory("ManagerContract");
-    const manager = await Manager.deploy(testAdr, testAdr, testAdr, testAdr, 1000);
-    await manager.deployed();
+    const manager1 = await Manager.deploy(testAdr, testAdr2, testAdr, testAdr2, 1000);
+    await manager1.deployed();
+    const manager2 = await Manager.deploy(testAdr2, testAdr, testAdr2, testAdr, 4500);
+    await manager2.deployed();
 
     const EntityContract = await ethers.getContractFactory("EntityContract");
-    const entityContract1 = await EntityContract.deploy("ENTITY V1");
+    const entityContract1 = await EntityContract.deploy("ENTITY V1", manager1.address, manager2.address);
     await entityContract1.deployed();
-    const entityContract2 = await EntityContract.deploy("ENTITY V2");
-    await entityContract2.deployed();
 
 
-    // We also save the contract's artifacts and address in the frontend directory
+    // save the contract's artifacts in the frontend directory
     saveFrontendFiles(token);
     // saveFrontendFiles(manager);
     const fs = require("fs");
@@ -47,19 +48,10 @@ async function main() {
         fs.mkdirSync(contractsDir);
     }
 
-    fs.appendFileSync(
-        contractsDir + "/contract-address.json",
-        JSON.stringify({ Manager: manager.address }, undefined, 2)
-    );
-    fs.appendFileSync(
-        contractsDir + "/contract-address.json",
-        JSON.stringify({ Entity: [entityContract1.address, entityContract2.address] }, undefined, 2)
-    );
-
     const EntityArtifact = artifacts.readArtifactSync("EntityContract");
-    const ManagerArtifact = artifacts.readArtifactSync("Manager");
+    const ManagerArtifact = artifacts.readArtifactSync("ManagerContract");
     fs.writeFileSync(
-        contractsDir + "/Manager.json",
+        contractsDir + "/ManagerContract.json",
         JSON.stringify(ManagerArtifact, null, 2)
     );
     fs.writeFileSync(
