@@ -1,19 +1,3 @@
-// function Dashboard(props) {
-//     const token = getToken();
-
-//     const handleLogout = () => {
-//         removeUserSession();
-//         props.history.push('/login');
-//     }
-
-//   return (
-//     <div>
-//       Welcome User! {token}<br /><br />
-//       <input type="button" onClick={handleLogout} value="Logout" />
-//     </div>
-//   );
-// }
-
 import React from "react";
 
 // We'll use ethers to interact with the Ethereum network and our contract
@@ -21,20 +5,11 @@ import { ethers } from "ethers";
 
 // We import the contract's artifacts and address here, as we are going to be
 // using them with ethers
-import TokenArtifact from "../contracts/Token.json";
 import ManagerArtifact from "../contracts/ManagerContract.json";
 import EntityArtifact from "../contracts/EntityContract.json";
-import contractAddress from "../contracts/contract-address.json";
 import { getToken, removeUserSession } from "../utils/Common";
 
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
-import BasicTable from "./BasicTable";
+
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -43,16 +18,6 @@ export class Dashboard extends React.Component {
     // We store multiple things in Dapp's state.
     // You don't need to follow this pattern, but it's an useful example.
     this.initialState = {
-      // The info of the token (i.e. It's Name and symbol)
-      tokenData: undefined,
-      // The user's address and balance
-      selectedAddress: undefined,
-      balance: undefined,
-      // The ID about transactions being sent, and any possible error with them
-      txBeingSent: undefined,
-      transactionError: undefined,
-      networkError: undefined,
-      managerData: undefined,
       entity: undefined,
       managerData: [],
     };
@@ -149,7 +114,7 @@ export class Dashboard extends React.Component {
       for (const _manager of this._managerArr) {
         let licensee = await _manager.getLicensee();
         let licensor = await _manager.getLicensor();
-        let isActive = await _manager.active();
+        let isActive = await _manager.isActive();
         _managerData.push({ licensee, licensor, isActive });
       }
       console.log("aux array:", _managerData);
@@ -158,9 +123,6 @@ export class Dashboard extends React.Component {
   }
 
   async _updateManagerData() {
-    // console.log("ENTITY ARRAY ", this._entityArr);
-    // const name = await this._entity.name();
-    // this.setState({entity: name});
   }
 
   async _getEntityArrData() {
