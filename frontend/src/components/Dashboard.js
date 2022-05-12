@@ -9,8 +9,28 @@ import ManagerArtifact from "../contracts/ManagerContract.json";
 import EntityArtifact from "../contracts/EntityContract.json";
 import { getToken, removeUserSession } from "../utils/Common";
 
+import {
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  Row,
+  Col,
+} from "reactstrap";
 
+import AccountBalanceIcon from "@material-ui/icons/AccountBalance";
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import PaymentIcon from "@material-ui/icons/Payment";
+import { RoyaltiesPaymentPie } from "./graphs/RoyaltiesPaymentPie.js";
+import { RoyaltySlGraphLine } from "./graphs/RoyaltySLGraphLine";
 
+var cardStyle = {
+  display: "block",
+  width: "30vw",
+  transitionDuration: "0.3s",
+  height: "45vw",
+};
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -28,14 +48,140 @@ export class Dashboard extends React.Component {
 
   render() {
     // const listItems = this.state.managerData.map((item) =>  <li>{item.licensee}</li>);
+    let royaltiesSumPaid = this._getRoyaltiesSum(1);
+    let royaltiesSumUnpaid = this._getRoyaltiesSum(0);
     return (
-      <div>
-        Entity Contract address: {this.token}
-        <br />
-        <br />
-        {/* <ul>{listItems}</ul> */}
-        <input type="button" onClick={this.handleLogout} value="Logout" />
-      </div>
+      <>
+        <div className="content">
+          <Row className="justify-content-md-center">
+            <Col lg="4" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <AccountBalanceWalletIcon
+                          fontSize="large"
+                          style={{ color: "#51cbce" }}
+                        />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Unpaid Royalties</p>
+                        <CardTitle tag="p">$ {royaltiesSumUnpaid}</CardTitle>
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+                <CardFooter>
+                  <hr />
+                  <div className="stats">
+                    <i className="fas fa-sync-alt" /> See Royalties Due For
+                    Payment
+                  </div>
+                </CardFooter>
+              </Card>
+            </Col>
+
+            <Col lg="4" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <PaymentIcon
+                          fontSize="large"
+                          style={{ color: "#51cbce" }}
+                        />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Paid Royalties</p>
+                        <CardTitle tag="p">$ {royaltiesSumPaid}</CardTitle>
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+                <CardFooter>
+                  <hr />
+                  <div className="stats">
+                    <i className="fas fa-sync-alt" /> Go To Transaction History
+                  </div>
+                </CardFooter>
+              </Card>
+            </Col>
+
+            <Col lg="4" md="6" sm="6">
+              <Card className="card-stats">
+                <CardBody>
+                  <Row>
+                    <Col md="4" xs="5">
+                      <div className="icon-big text-center icon-warning">
+                        <AccountBalanceIcon
+                          fontSize="large"
+                          style={{ color: "#51cbce" }}
+                        />
+                      </div>
+                    </Col>
+                    <Col md="8" xs="7">
+                      <div className="numbers">
+                        <p className="card-category">Active Smart Licenses</p>
+                        <CardTitle tag="p">
+                          {this.state.managerData.length}
+                        </CardTitle>
+                        <p />
+                      </div>
+                    </Col>
+                  </Row>
+                </CardBody>
+                <CardFooter>
+                  <hr />
+                  <div className="stats">
+                    <i className="fas fa-sync-alt" /> See Related Smart Licenses
+                  </div>
+                </CardFooter>
+              </Card>
+            </Col>
+          </Row>
+          {/* GRAPH ROW FOLLOWING HERE: */}
+          <>
+            <Row>
+              <Col md="5">
+                <Card className="chart">
+                  <CardHeader>
+                    <CardTitle tag="h5">Unpaid Royalties</CardTitle>
+                    <p className="card-category">
+                      Grouped by Active Smart Licenses (values in $)
+                    </p>
+                  </CardHeader>
+                  <CardBody style={{ height: 400 }}>
+                    {/* <div style={{height: 200}}> */}
+                    <RoyaltiesPaymentPie data={this.state.managerData} />
+                    {/* </div> */}
+                  </CardBody>
+                </Card>
+              </Col>
+              <Col md="7">
+                <Card className="chart">
+                  <CardHeader>
+                    <CardTitle tag="h5">Royalties Timeline</CardTitle>
+                    <p className="card-category">
+                      Paid and Unpaid Royalties by Active Smart Licenses
+                    </p>
+                  </CardHeader>
+                  <CardBody style={{ height: 400 }}>
+                    <RoyaltySlGraphLine data={this.state.managerData}/>
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+          </>
+        </div>
+      </>
     );
   }
 
@@ -73,6 +219,7 @@ export class Dashboard extends React.Component {
       EntityArtifact.abi,
       this._provider.getSigner(0)
     );
+    console.log("Entity contract:", this._entity);
 
     const contractsArr = await this._entity.getActiveLicenseeSLs();
     console.log(
@@ -92,11 +239,10 @@ export class Dashboard extends React.Component {
     }
 
     this._getManagerData();
-
   }
 
   _startPollingData() {
-    this._pollDataInterval = setInterval(() => this._getManagerData(), 10000);
+    this._pollDataInterval = setInterval(() => this._getManagerData(), 100000);
     // this._pollDataIntervalTest = setInterval(() => this._updateEntityData(), 1000);
 
     // We run it once immediately so we don't have to wait for it
@@ -108,22 +254,43 @@ export class Dashboard extends React.Component {
     this._pollDataInterval = undefined;
   }
 
+  _transformManagerLegacyData(data) {
+    let transformedData = [];
+    if (data.length % 3 != 0) {
+      console.log("Invalid array input for legacy data transform.");
+    } else {
+      for (let i = 0; i < data.length; i++) {
+        transformedData.push(parseInt(data[i]._hex, 16));
+      }
+    }
+    return transformedData;
+  }
+
   async _getManagerData() {
     if (this._managerArr.length != 0) {
       let _managerData = [];
       for (const _manager of this._managerArr) {
+        let managerAddress = _manager.address;
         let licensee = await _manager.getLicensee();
         let licensor = await _manager.getLicensor();
         let isActive = await _manager.isActive();
-        _managerData.push({ licensee, licensor, isActive });
+        let royaltyData = this._transformManagerLegacyData(
+          await _manager.getRoyaltyHistoryLegacyDapp()
+        );
+        _managerData.push({
+          managerAddress,
+          licensee,
+          licensor,
+          isActive,
+          royaltyData,
+        });
       }
       console.log("aux array:", _managerData);
       this.setState({ managerData: [..._managerData] });
     }
   }
 
-  async _updateManagerData() {
-  }
+  async _updateManagerData() {}
 
   async _getEntityArrData() {
     // let _entityData = [];
@@ -137,6 +304,19 @@ export class Dashboard extends React.Component {
 
   async _updateEntityData() {}
 
+  _getRoyaltiesSum(flag) {
+    let roy = 0;
+    if (this.state.managerData.length != 0) {
+      for (const managerData of this.state.managerData) {
+        for (let i = 0; i < managerData.royaltyData.length - 2; i = i + 3) {
+          if (managerData.royaltyData[i + 2] === flag) {
+            roy += managerData.royaltyData[i];
+          }
+        }
+      }
+    }
+    return roy;
+  }
   // This method resets the state
   _resetState() {
     this.setState(this.initialState);

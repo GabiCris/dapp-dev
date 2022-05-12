@@ -74,16 +74,24 @@ class Sidebar extends React.Component {
         </div>
         <div className="sidebar-wrapper" ref={this.sidebar}>
           <Nav>
+                    {/* <li className="active active-pro" key={1}> */}
                     <NavLink
                       to="/dashboard"
+                      className="nav-link"
+                      activeClassName="active"
                     >
                       Dashboard
                     </NavLink>
+                    {/* </li> */}
+                    {/* <li className=" active-pro" key={2}> */}
                     <NavLink
                       to="/dashboard"
+                      className="nav-link"
+                      activeClassName="active"
                     >
                       placeholder
                     </NavLink>
+                    {/* </li> */}
           </Nav>
           <Box mt={18} px={1}>
             <Row>

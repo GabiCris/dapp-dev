@@ -11,12 +11,16 @@ interface Manager {
     function updateRoyaltyComputation(address) external;
 
     // uint arr n*3 [(timestamp, royalty, boolean)]
-    function getRoyaltyHistoryLegacyDapp() external returns (uint256[] memory);
+    function getRoyaltyHistoryLegacyDapp()
+        external
+        view
+        returns (uint256[] memory);
 
     function getLicensee() external view returns (address);
-    function getLicensor() external view returns (address);
-    function isActive() external view returns (bool);
 
+    function getLicensor() external view returns (address);
+
+    function isActive() external view returns (bool);
 }
 
 // add expiration boolean or date
@@ -60,21 +64,20 @@ contract ManagerContract is Manager, Ownable {
     // test input for dapp, format [royalty, time, bool]
     function getRoyaltyHistoryLegacyDapp()
         external
+        view
         override
         returns (uint256[] memory)
     {
-        uint256[] memory hist = new uint256[](4);
-        uint256 a = 0;
-        hist[0] =
-            uint256(
-                keccak256(abi.encodePacked(block.difficulty, address(this)))
-            ) %
-            10000;
-        hist[1] = block.timestamp;
-        hist[2] =
-            uint256(keccak256(abi.encodePacked(block.difficulty, hist[0]))) %
-            10000;
-        hist[3] = block.timestamp + 10000;
+        uint256[] memory hist = new uint256[](9);
+        hist[0] = 1000 + expirationDate;
+        hist[1] = block.timestamp + expirationDate;
+        hist[2] = 0;
+        hist[3] = 2500 + expirationDate;
+        hist[4] = block.timestamp - 10000000 + expirationDate;
+        hist[5] = 1;
+        hist[6] = 500 + expirationDate;
+        hist[7] = block.timestamp - 2000000 - expirationDate;
+        hist[8] = 1;
         return hist;
     }
 
@@ -83,7 +86,7 @@ contract ManagerContract is Manager, Ownable {
         active = false;
     }
 
-    function getLicensee() external override view returns (address) {
+    function getLicensee() external view override returns (address) {
         return licensee;
     }
 
@@ -91,11 +94,11 @@ contract ManagerContract is Manager, Ownable {
         licensee = _licensee;
     }
 
-    function getLicensor() external override view returns (address) {
+    function getLicensor() external view override returns (address) {
         return licensor;
     }
 
-    function isActive() external override view returns (bool) {
+    function isActive() external view override returns (bool) {
         return active;
     }
 }

@@ -36,7 +36,8 @@ import {
   InputGroupText,
   Input,
 } from "reactstrap";
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import { removeUserSession } from "utils/Common";
 
 class DemoNavbar extends React.Component {
   constructor(props) {
@@ -183,6 +184,9 @@ class DemoNavbar extends React.Component {
                     <span className="d-lg-none d-md-block">Account</span>
                   </p>
                 </Link>
+              </NavItem>
+              <NavItem className="nav-link btn-rotate">
+                <ExitToAppIcon onClick={() => removeUserSession()}/>
               </NavItem>
               <NavItem className="nav-link btn-rotate" onClick={() => this.props.logout()}>
                 {/* <Link to="/logout" className="nav-link btn-rotate" setToken={this.props.setToken}> */}

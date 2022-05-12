@@ -28,7 +28,7 @@ async function main() {
     await token.deployed();
 
     const Manager = await ethers.getContractFactory("ManagerContract");
-    const manager1 = await Manager.deploy(testAdr, testAdr2, testAdr, testAdr2, 1000);
+    const manager1 = await Manager.deploy(testAdr, testAdr2, testAdr, testAdr2, 1250);
     await manager1.deployed();
     const manager2 = await Manager.deploy(testAdr2, testAdr, testAdr2, testAdr, 4500);
     await manager2.deployed();
@@ -36,6 +36,7 @@ async function main() {
     const EntityContract = await ethers.getContractFactory("EntityContract");
     const entityContract1 = await EntityContract.deploy("ENTITY V1", manager1.address, manager2.address);
     await entityContract1.deployed();
+    console.log("Entity Address: ", entityContract1.address);
 
 
     // save the contract's artifacts in the frontend directory
