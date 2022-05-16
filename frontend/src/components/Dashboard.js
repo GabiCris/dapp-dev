@@ -25,12 +25,6 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import { RoyaltiesPaymentPie } from "./graphs/RoyaltiesPaymentPie.js";
 import { RoyaltySlGraphLine } from "./graphs/RoyaltySLGraphLine";
 
-var cardStyle = {
-  display: "block",
-  width: "30vw",
-  transitionDuration: "0.3s",
-  height: "45vw",
-};
 export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -131,7 +125,7 @@ export class Dashboard extends React.Component {
                       <div className="numbers">
                         <p className="card-category">Active Smart Licenses</p>
                         <CardTitle tag="p">
-                          {this.state.managerData.length}
+                          {this.props.managerData.length}
                         </CardTitle>
                         <p />
                       </div>
@@ -160,7 +154,7 @@ export class Dashboard extends React.Component {
                   </CardHeader>
                   <CardBody style={{ height: 400 }}>
                     {/* <div style={{height: 200}}> */}
-                    <RoyaltiesPaymentPie data={this.state.managerData} />
+                    <RoyaltiesPaymentPie data={this.props.managerData} />
                     {/* </div> */}
                   </CardBody>
                 </Card>
@@ -174,7 +168,7 @@ export class Dashboard extends React.Component {
                     </p>
                   </CardHeader>
                   <CardBody style={{ height: 400 }}>
-                    <RoyaltySlGraphLine data={this.state.managerData}/>
+                    <RoyaltySlGraphLine data={this.props.managerData}/>
                   </CardBody>
                 </Card>
               </Col>
@@ -191,7 +185,7 @@ export class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    this._initialize();
+    // this._initialize();
   }
 
   componentWillUnmount() {
@@ -306,8 +300,8 @@ export class Dashboard extends React.Component {
 
   _getRoyaltiesSum(flag) {
     let roy = 0;
-    if (this.state.managerData.length != 0) {
-      for (const managerData of this.state.managerData) {
+    if (this.props.managerData.length != 0) {
+      for (const managerData of this.props.managerData) {
         for (let i = 0; i < managerData.royaltyData.length - 2; i = i + 3) {
           if (managerData.royaltyData[i + 2] === flag) {
             roy += managerData.royaltyData[i];

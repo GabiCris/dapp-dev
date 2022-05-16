@@ -8,6 +8,11 @@ import { BrowserRouter } from "react-router-dom";
 
 import "./assets/scss/paper-dashboard.scss?v=1.2.0";
 import "./assets/demo/demo.css";
+import { Switch, NavLink, Route } from "react-router-dom";
+import Login from "./components/Login";
+import Dashboard from "./components/Dashboard";
+import PrivateRoute from "./utils/PrivateRoute.js";
+import PublicRoute from "./utils/PublicRoute.js";
 
 // This is the entry point of your application, but it just renders the Dapp
 // react component. All of the logic is contained in it.
@@ -15,7 +20,11 @@ import "./assets/demo/demo.css";
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-    <Dapp />
+      <Switch>
+        <PrivateRoute exact path="/" component={Dapp} />
+        <PublicRoute path="/login" component={Login} />
+        <PrivateRoute path="/dashboard" component={Dapp} />
+      </Switch>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

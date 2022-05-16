@@ -13,6 +13,7 @@ export const getToken = () => {
 // remove the token and user from the session storage
 export const removeUserSession = () => {
   sessionStorage.removeItem('token');
+  window.location.reload(false);
 //   sessionStorage.removeItem('user');
 }
  

@@ -30,7 +30,9 @@ import logo from "../assets/logos/ALPSlogo_noSoftware.png";
 import logocam from "../assets/logos/ca-logo-white.png";
 import logoifm from "../assets/logos/ifm-logo.png";
 import logoPitch from "../assets/logos/pitchin-logo-white.svg";
-import Box from '@material-ui/core/Box';
+import Box from "@material-ui/core/Box";
+import { useLocation } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 var ps;
 
@@ -58,6 +60,7 @@ class Sidebar extends React.Component {
     }
   }
   render() {
+    console.log("SIdebar prop", this.props);
     return (
       <div
         className="sidebar"
@@ -70,28 +73,43 @@ class Sidebar extends React.Component {
               <img src={logo} alt="react-logo" />
             </div>
           </a>
-          <a className="simple-text logo-normal">{this.props.appState === "0" ? "LICENSEE" : "LICENSOR"}</a>
+          <a className="simple-text logo-normal">
+            {this.props.appState === "0" ? "LICENSOR" : "LICENSEE"}
+          </a>
         </div>
         <div className="sidebar-wrapper" ref={this.sidebar}>
           <Nav>
-                    {/* <li className="active active-pro" key={1}> */}
-                    <NavLink
-                      to="/dashboard"
-                      className="nav-link"
-                      activeClassName="active"
-                    >
-                      Dashboard
-                    </NavLink>
-                    {/* </li> */}
-                    {/* <li className=" active-pro" key={2}> */}
-                    <NavLink
-                      to="/dashboard"
-                      className="nav-link"
-                      activeClassName="active"
-                    >
-                      placeholder
-                    </NavLink>
-                    {/* </li> */}
+            <li className={this.activeRoute + ""} key={1}>
+            <NavLink
+              to="/dashboard"
+              className="nav-link"
+              activeClassName="active"
+            >
+              <i className="nc-icon nc-layout-11"/>
+              <p>Dashboard</p>
+              
+            </NavLink>
+            </li>
+            <li className={this.activeRoute + ""} key={2}>
+            <NavLink
+              to="/dashboard"
+              className="nav-link"
+              activeClassName="active"
+            >
+              <i className="nc-icon nc-money-coins"/>
+              <p>Royalties</p>
+            </NavLink>
+            </li>
+            <li className={this.activeRoute + ""} key={3}>
+            <NavLink
+              to="/dashboard"
+              className="nav-link"
+              activeClassName="active"
+            >
+              <i className="nc-icon nc-vector"/>
+              <p>Active Licenses</p>
+            </NavLink>
+            </li>
           </Nav>
           <Box mt={18} px={1}>
             <Row>
@@ -122,4 +140,4 @@ class Sidebar extends React.Component {
   }
 }
 
-export default Sidebar;
+export default withRouter(Sidebar);
