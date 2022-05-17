@@ -312,9 +312,6 @@ export class Dashboard extends React.Component {
     return roy;
   }
   // This method resets the state
-  _resetState() {
-    this.setState(this.initialState);
-  }
 }
 
 export default Dashboard;

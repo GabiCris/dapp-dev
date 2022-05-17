@@ -1,7 +1,5 @@
 import React from "react";
 
-import { Switch, NavLink, Route, BrowserRouter } from "react-router-dom";
-import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import PrivateRoute from "./utils/PrivateRoute.js";
 import PublicRoute from "./utils/PublicRoute.js";
@@ -14,6 +12,10 @@ import { ethers } from "ethers";
 import { getToken } from "utils/Common";
 import ManagerArtifact from "contracts/ManagerContract.json";
 import EntityArtifact from "contracts/EntityContract.json";
+import Royalties from "components/views/Royalties";
+import { Redirect } from "react-router-dom";
+import { Route, Switch } from "react-router-dom";
+import ActiveLicenses from "components/views/ActiveLicenses";
 
 var ps;
 export class Dapp extends React.Component {
@@ -137,7 +139,7 @@ export class Dapp extends React.Component {
           royaltyData,
         });
       }
-      console.log("aux array:", _managerData);
+      console.log("Manager Data Arr:", _managerData);
       this.setState({ managerData: [..._managerData] });
     }
   }
@@ -154,20 +156,53 @@ export class Dapp extends React.Component {
         <div className="main-panel" ref={this.mainPanel}>
           <DemoNavbar {...this.props} />
 
-          <Dashboard
+          {/* <Dashboard
             {...this.props}
             managerArr={this.managerArr}
             managerData={this.state.managerData}
             entity={this.entity}
-          />
-          <PrivateRoute
-            path="/royalties"
-            {...this.props}
-            component={Dashboard}
-          />
-          <PrivateRoute path="/active-licenses" component={Dashboard} />
-
-
+          /> */}
+          <Switch>
+            <Route
+              exact
+              path="/"
+              render={(props) => (
+                <Dashboard
+                  {...props}
+                  managerArr={this.managerArr}
+                  managerData={this.state.managerData}
+                  entity={this.entity}
+                  key={0}
+                />
+              )}
+            />
+            <Route
+              path={"/royalties"}
+              render={(props) => (
+                <Royalties
+                  {...props}
+                  managerArr={this.managerArr}
+                  managerData={this.state.managerData}
+                  entity={this.entity}
+                  key={1}
+                />
+              )}
+            />
+            <Route
+              path={"/licenses"}
+              render={(props) => (
+                <ActiveLicenses
+                  {...props}
+                  managerArr={this.managerArr}
+                  managerData={this.state.managerData}
+                  entity={this.entity}
+                  key={2}
+                />
+              )}
+            />
+          </Switch>
+          {/* <PrivateRoute path="/active-licenses" component={Dashboard} /> */}
+          {/* <Redirect exact from="/" to="/" /> */}
           <Footer fluid />
         </div>
         {/* </BrowserRouter> */}

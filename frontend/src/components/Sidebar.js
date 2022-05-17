@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    console.log("SIdebar prop", this.props);
+    // console.log("SIdebar prop", this.props);
     return (
       <div
         className="sidebar"
@@ -81,7 +81,7 @@ class Sidebar extends React.Component {
           <Nav>
             <li className={this.activeRoute + ""} key={1}>
             <NavLink
-              to="/dashboard"
+              to="/"
               className="nav-link"
               activeClassName="active"
             >
@@ -92,7 +92,7 @@ class Sidebar extends React.Component {
             </li>
             <li className={this.activeRoute + ""} key={2}>
             <NavLink
-              to="/dashboard"
+              to="/royalties"
               className="nav-link"
               activeClassName="active"
             >
@@ -102,12 +102,12 @@ class Sidebar extends React.Component {
             </li>
             <li className={this.activeRoute + ""} key={3}>
             <NavLink
-              to="/dashboard"
+              to="/licenses"
               className="nav-link"
               activeClassName="active"
             >
               <i className="nc-icon nc-vector"/>
-              <p>Active Licenses</p>
+              <p>Smart Licenses</p>
             </NavLink>
             </li>
           </Nav>
