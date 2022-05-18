@@ -3,6 +3,7 @@ import MUIDataTable, { ExpandButton } from "mui-datatables";
 import TableRow from "@material-ui/core/TableRow";
 import TableCell from "@material-ui/core/TableCell";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
+import LicenseTableExtension from "./LicenseTableExpansion";
 // import ActiveLicenseExpansion from "components/table/ActiveLicenseExpansion";
 
 class ActiveLicensesTable extends React.Component {
@@ -17,7 +18,7 @@ class ActiveLicensesTable extends React.Component {
 
     for (let managerContr of data) {
       transformedData.push([
-        counter,
+        counter++,
         managerContr.managerAddress,
         managerContr.licensee,
         managerContr.licensor,
@@ -91,17 +92,17 @@ class ActiveLicensesTable extends React.Component {
         return (
           <TableRow>
             <TableCell colSpan={colSpan}>
-              {/* <ActiveLicenseExpansion
-                data={rowData}
-                fullData={this.props.data[rowMeta.rowIndex]}
-                licensors={this.props.licensors}
-              /> */}
+              <LicenseTableExtension
+                {...this.props}
+                rowData={rowData}
+                managerAddress={rowData[1]}
+              />
             </TableCell>
           </TableRow>
         );
       },
-      onRowExpansionChange: (curExpanded, allExpanded, rowsExpanded) =>
-        console.log(curExpanded, allExpanded, rowsExpanded),
+      // onRowExpansionChange: (curExpanded, allExpanded, rowsExpanded) =>
+      //   console.log(curExpanded, allExpanded, rowsExpanded),
     };
 
     const theme = createTheme({
@@ -126,6 +127,7 @@ class ActiveLicensesTable extends React.Component {
     return (
       <MuiThemeProvider theme={theme}>
         <MUIDataTable
+          title={"Licenses"}
           data={this.transformTableData(this.props.managerData)}
           columns={columns}
           options={options}
