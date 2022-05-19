@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 contract EntityContract is Ownable {
     // General info
     string public name;
+    string public contactInformation;
+    
     // License info -> Manager Contracts
     address[] licenseeSLs;
     address[] licensorSLs;

@@ -24,6 +24,7 @@ import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
 import PaymentIcon from "@material-ui/icons/Payment";
 import { RoyaltiesPaymentPie } from "./graphs/RoyaltiesPaymentPie.js";
 import { RoyaltySlGraphLine } from "./graphs/RoyaltySLGraphLine";
+import { CumulativeRoyaltyGraph } from "./graphs/CumulativeRoyaltyGraph";
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -168,7 +169,24 @@ export class Dashboard extends React.Component {
                     </p>
                   </CardHeader>
                   <CardBody style={{ height: 400 }}>
-                    <RoyaltySlGraphLine data={this.props.managerData}/>
+                    <RoyaltySlGraphLine data={this.props.managerData} />
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+            <Row>
+              <Col md="12">
+                <Card className="chart">
+                  <CardHeader>
+                    <CardTitle tag="h5">Cumulative Royalties Payments</CardTitle>
+                    <p className="card-category">
+                      Grouped by Royalty Issue Date
+                    </p>
+                  </CardHeader>
+                  <CardBody style={{ height: 400 }}>
+                    {/* <div style={{height: 200}}> */}
+                    <CumulativeRoyaltyGraph data={this.props.managerData} />
+                    {/* </div> */}
                   </CardBody>
                 </Card>
               </Col>

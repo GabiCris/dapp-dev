@@ -66,11 +66,12 @@ export const LicenseTableExtensionGraph = ({
       type: "linear",
       min: "auto",
       max: "auto",
-      stacked: false,
+      stacked: true,
       reverse: false,
     }}
     axisTop={null}
     axisRight={null}
+    enableArea={true}
     axisBottom={{
       format: "%b %d",
       legend: "Royalty Issue Date",
