@@ -66,7 +66,15 @@ export class Dapp extends React.Component {
 
   async _initializeEthers() {
     // We first initialize ethers by creating a provider
-    this._provider = new ethers.providers.JsonRpcProvider();
+    let url = "http://131.114.2.151:8545";
+    this._provider = new ethers.providers.JsonRpcProvider(url);
+    this._provider.getBlockNumber().then((result) => {
+      console.log("Current block number: " + result);
+  });
+    this._provider.listAccounts().then((result) => {
+      console.log("Managed Accounts: " + result);
+  });
+
 
     this._entity = new ethers.Contract(
       this.token,
@@ -96,7 +104,7 @@ export class Dapp extends React.Component {
   }
 
   _startPollingData() {
-    this._pollDataInterval = setInterval(() => this._getManagerData(), 100000);
+    this._pollDataInterval = setInterval(() => this._getManagerData(), 5000);
     // this._pollDataIntervalTest = setInterval(() => this._updateEntityData(), 1000);
 
     // We run it once immediately so we don't have to wait for it

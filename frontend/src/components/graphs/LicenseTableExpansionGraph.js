@@ -64,7 +64,7 @@ export const LicenseTableExtensionGraph = ({
     xFormat="time:%Y-%m-%d"
     yScale={{
       type: "linear",
-      min: "auto",
+      min: "0",
       max: "auto",
       stacked: true,
       reverse: false,
