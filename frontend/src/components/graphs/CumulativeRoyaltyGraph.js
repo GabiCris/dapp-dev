@@ -40,9 +40,9 @@ function transformData(managerData) {
       }
       transformedData[k].data.sort((a, b) => a.x - b.x);
       for (let i = 0; i < transformedData[k].data.length; i++) {
-        transformedData[k].data[i].x = transformedData[k].data[i].x
-          .toISOString()
-          .slice(0, 10);
+        transformedData[k].data[i].x = transformedData[k].data[i].x;
+          // .toISOString()
+          // .slice(0, 10);
       }
     }
     auxArr.sort((a, b) => a[0] - b[0]);
@@ -69,12 +69,12 @@ function transformData(managerData) {
       id: "Timeline",
       data: [],
     });
-    for (let elem of auxArr) {
-      transformedData[transformedData.length - 1].data.push({
-        x: elem[0],
-        y: elem[1],
-      });
-    }
+    // for (let elem of auxArr) {
+    //   transformedData[transformedData.length - 1].data.push({
+    //     x: elem[0],
+    //     y: elem[1],
+    //   });
+    // }
   }
 
   console.log("auxarr after", transformedData);

@@ -22,8 +22,10 @@ ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
       <Switch>
+        {/* <Route path="/login" component={Login} /> */}
         <PublicRoute path="/login" component={Login} />
         <PrivateRoute path="/" component={Dapp} />
+        {/* <Route path="/" component={Dapp} /> */}
         {/* <PrivateRoute path="/dashboard" component={Dapp} /> */}
         <Redirect exact from="/" to="/" />
       </Switch>

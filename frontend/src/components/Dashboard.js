@@ -1,12 +1,5 @@
 import React from "react";
 
-// We'll use ethers to interact with the Ethereum network and our contract
-import { ethers } from "ethers";
-
-// We import the contract's artifacts and address here, as we are going to be
-// using them with ethers
-import ManagerArtifact from "../contracts/ManagerContract.json";
-import EntityArtifact from "../contracts/EntityContract.json";
 import { getToken, removeUserSession } from "../utils/Common";
 
 import {
@@ -202,70 +195,6 @@ export class Dashboard extends React.Component {
     this.props.history.push("/login");
   }
 
-  componentDidMount() {
-    // this._initialize();
-  }
-
-  componentWillUnmount() {
-    // We poll the user's balance, so we have to stop doing that when Dapp
-    // gets unmounted
-    this._stopPollingData();
-  }
-
-  async _connectWallet() {
-    this._initialize();
-  }
-
-  _initialize() {
-    this._initializeEthers();
-    // this._getManagerData();
-    this._startPollingData();
-  }
-
-  async _initializeEthers() {
-    // We first initialize ethers by creating a provider
-    this._provider = new ethers.providers.JsonRpcProvider();
-
-    this._entity = new ethers.Contract(
-      this.token,
-      EntityArtifact.abi,
-      this._provider.getSigner(0)
-    );
-    console.log("Entity contract:", this._entity);
-
-    const contractsArr = await this._entity.getActiveLicenseeSLs();
-    console.log(
-      "Associated Manager Contracts: ",
-      JSON.stringify(contractsArr, null, 4)
-    );
-
-    this._managerArr = new Array();
-    for (const _address of contractsArr) {
-      this._managerArr.push(
-        new ethers.Contract(
-          _address,
-          ManagerArtifact.abi,
-          this._provider.getSigner(0)
-        )
-      );
-    }
-
-    this._getManagerData();
-  }
-
-  _startPollingData() {
-    this._pollDataInterval = setInterval(() => this._getManagerData(), 100000);
-    // this._pollDataIntervalTest = setInterval(() => this._updateEntityData(), 1000);
-
-    // We run it once immediately so we don't have to wait for it
-    // this._updateBalance();
-  }
-
-  _stopPollingData() {
-    clearInterval(this._pollDataInterval);
-    this._pollDataInterval = undefined;
-  }
-
   _transformManagerLegacyData(data) {
     let transformedData = [];
     if (data.length % 3 != 0) {
@@ -277,44 +206,6 @@ export class Dashboard extends React.Component {
     }
     return transformedData;
   }
-
-  async _getManagerData() {
-    if (this._managerArr.length != 0) {
-      let _managerData = [];
-      for (const _manager of this._managerArr) {
-        let managerAddress = _manager.address;
-        let licensee = await _manager.getLicensee();
-        let licensor = await _manager.getLicensor();
-        let isActive = await _manager.isActive();
-        let royaltyData = this._transformManagerLegacyData(
-          await _manager.getRoyaltyHistoryLegacyDapp()
-        );
-        _managerData.push({
-          managerAddress,
-          licensee,
-          licensor,
-          isActive,
-          royaltyData,
-        });
-      }
-      console.log("aux array:", _managerData);
-      this.setState({ managerData: [..._managerData] });
-    }
-  }
-
-  async _updateManagerData() {}
-
-  async _getEntityArrData() {
-    // let _entityData = [];
-    // for (const enitityContr of this._entityArr) {
-    //   let _name = await this._entity.name();
-    //   _entityData.push({address: enitityContr.address, name:_name});
-    // }
-    // console.log("aux array:", _entityData);
-    // this.setState({entityData: [..._entityData]});
-  }
-
-  async _updateEntityData() {}
 
   _getRoyaltiesSum(flag) {
     let roy = 0;

@@ -50,9 +50,9 @@ function transformData(managerData) {
       }
       transformedData[k].data.sort((a, b) => a.x - b.x);
       for (let i = 0; i < transformedData[k].data.length; i++) {
-        transformedData[k].data[i].x = transformedData[k].data[i].x
-          .toISOString()
-          .slice(0, 10);
+        transformedData[k].data[i].x = transformedData[k].data[i].x;
+          // .toISOString()
+          // .slice(0, 10);
       }
     }
   }
