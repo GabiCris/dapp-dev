@@ -50,9 +50,10 @@ function transformData(managerData) {
       }
       transformedData[k].data.sort((a, b) => a.x - b.x);
       for (let i = 0; i < transformedData[k].data.length; i++) {
-        transformedData[k].data[i].x = transformedData[k].data[i].x;
-          // .toISOString()
-          // .slice(0, 10);
+        transformedData[k].data[i].x = transformedData[k].data[i].x
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " ");
       }
     }
   }
@@ -67,9 +68,10 @@ export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
     colors={{ scheme: 'dark2' }}
     xScale={{
       type: "time",
-      format: "%Y-%m-%d",
+      format: "%Y-%m-%d %H:%M:%S",
+      //  precision: "minute"
     }}
-    xFormat="time:%Y-%m-%d"
+    xFormat="time:%Y-%m-%d %H:%M:%S"
     yScale={{
       type: "linear",
       min: "0",
@@ -81,8 +83,8 @@ export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
     axisRight={null}
     axisBottom={{
       orient:'bottom',
-      format: "%b %d",
-      legend: "Royalty Issue Date",
+      format: "%H:%M",
+      legend: "Royalty Issue Time",
       legendOffset: 36,
       legendPosition: "middle",
     }}
@@ -96,7 +98,7 @@ export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
       legendPosition: "middle",
     }}
     // enableArea={true}
-    pointSize={10}
+    pointSize={0}
     pointColor={{ theme: "background" }}
     pointBorderWidth={2}
     pointBorderColor={{ from: "serieColor" }}

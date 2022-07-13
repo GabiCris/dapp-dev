@@ -10,7 +10,7 @@ let dataTemplate = [
   }
 ];
 
-function transformData(managerData) {
+function transformData(managerData, entityData) {
   let transformedData = [];
   if (managerData.length != 0) {
     for (const data of managerData) {
@@ -22,17 +22,18 @@ function transformData(managerData) {
       }
       transformedData.push({
         id: data.managerAddress,
-        label: data.managerAddress,
+        label: entityData[data.managerAddress],
         value: roy,
       });
+      console.log("data pie", data.managerAddress, entityData);
     }
   }
   return transformedData;
 }
 
-export const RoyaltiesPaymentPie = ({ data /* see data tab */ }) => (
+export const RoyaltiesPaymentPie = ({ data, entityData /* see data tab */ }) => (
   <ResponsivePie
-    data={transformData(data)}
+    data={transformData(data, entityData)}
     margin={{ top: 10, right: 80, bottom: 40, left: 80 }}
     innerRadius={0.5}
     padAngle={0.7}

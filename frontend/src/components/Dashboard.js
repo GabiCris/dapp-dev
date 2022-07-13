@@ -148,7 +148,7 @@ export class Dashboard extends React.Component {
                   </CardHeader>
                   <CardBody style={{ height: 400 }}>
                     {/* <div style={{height: 200}}> */}
-                    <RoyaltiesPaymentPie data={this.props.managerData} />
+                    <RoyaltiesPaymentPie data={this.props.managerData} entityData={this.props.entityData}/>
                     {/* </div> */}
                   </CardBody>
                 </Card>
@@ -167,6 +167,24 @@ export class Dashboard extends React.Component {
                 </Card>
               </Col>
             </Row>
+            <Row>
+              <Col md="12">
+                <Card className="chart">
+                  <CardHeader>
+                    <CardTitle tag="h5">Cumulative Royalties Payments</CardTitle>
+                    <p className="card-category">
+                      Grouped by Royalty Issue Date
+                    </p>
+                  </CardHeader>
+                  <CardBody style={{ height: 400 }}>
+                    {/* <div style={{height: 200}}> */}
+                    <CumulativeRoyaltyGraph data={this.props.managerData} />
+                    {/* </div> */}
+                  </CardBody>
+                </Card>
+              </Col>
+            </Row>
+
             <Row>
               <Col md="12">
                 <Card className="chart">

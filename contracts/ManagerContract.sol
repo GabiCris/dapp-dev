@@ -32,6 +32,7 @@ contract ManagerContract is Manager, Ownable {
     address public licensor;
     bool public active;
     uint256 public expirationDate;
+    // uint256[] hist;
 
     constructor(
         address _aggregator,
@@ -47,6 +48,16 @@ contract ManagerContract is Manager, Ownable {
         creationDate = block.timestamp;
         active = true;
         expirationDate = _expirationDate;
+
+        // hist.push(1000 + expirationDate);
+        // hist.push(block.timestamp + expirationDate);
+        // hist.push(0);
+        // hist.push(2500 + expirationDate);
+        // hist.push(block.timestamp - 10000000 + expirationDate);
+        // hist.push(1);
+        // hist.push(500 + expirationDate);
+        // hist.push(block.timestamp - 2000000 - expirationDate);
+        // hist.push(1);
     }
 
     function updateAggregator(address _aggregator) public override onlyOwner {

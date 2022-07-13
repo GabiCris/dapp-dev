@@ -28,6 +28,7 @@ export class Dapp extends React.Component {
       activeColor: "info",
       entity: undefined,
       managerData: [],
+      entityMap: {},
     };
     this.mainPanel = React.createRef();
     this.token = getToken();
@@ -51,8 +52,8 @@ export class Dapp extends React.Component {
   componentDidUpdate(e) {
     // e.preventDefault();
     if (e.history.action === "PUSH") {
-      this.mainPanel.current.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
+      // this.mainPanel.current.scrollTop = 0;
+      // document.scrollingElement.scrollTop = 0;
     }
   }
   handleActiveClick = (color) => {
@@ -74,11 +75,10 @@ export class Dapp extends React.Component {
     // this._provider = new ethers.providers.JsonRpcProvider();
     this._provider.getBlockNumber().then((result) => {
       console.log("Current block number: " + result);
-  });
+    });
     this._provider.listAccounts().then((result) => {
       console.log("Managed Accounts: " + result);
-  });
-
+    });
 
     this._entity = new ethers.Contract(
       this.token,
@@ -108,7 +108,7 @@ export class Dapp extends React.Component {
   }
 
   _startPollingData() {
-    this._pollDataInterval = setInterval(() => this._getManagerData(), 15000);
+    this._pollDataInterval = setInterval(() => this._getManagerData(), 10000);
     // this._pollDataIntervalTest = setInterval(() => this._updateEntityData(), 1000);
 
     // We run it once immediately so we don't have to wait for it
@@ -135,6 +135,7 @@ export class Dapp extends React.Component {
   async _getManagerData() {
     if (this._managerArr.length != 0) {
       let _managerData = [];
+      let _entityData = {};
       for (const _manager of this._managerArr) {
         let managerAddress = _manager.address;
         let licensee = await _manager.getLicensee();
@@ -150,9 +151,26 @@ export class Dapp extends React.Component {
           isActive,
           royaltyData,
         });
+
+        // if (!this.state.entityMap.has(licensee)) {
+          let _entityLicensee = new ethers.Contract(
+            licensee,
+            EntityArtifact.abi,
+            this._provider.getSigner(0)
+          );
+          let _entityLicensor = new ethers.Contract(
+            licensor,
+            EntityArtifact.abi,
+            this._provider.getSigner(0)
+          );
+          let nameLicensor = await _entityLicensor.name();
+          let nameLicensee = await _entityLicensee.name();
+          _entityData[licensee] = nameLicensee;
+          _entityData[licensor] = nameLicensor;
+        // }
       }
       console.log("Manager Data Arr:", _managerData);
-      this.setState({ managerData: [..._managerData] });
+      this.setState({ managerData: [..._managerData], entityMap: _entityData });
     }
   }
 
@@ -166,7 +184,7 @@ export class Dapp extends React.Component {
           activeColor={this.state.activeColor}
         />
         <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar/>
+          <DemoNavbar />
 
           {/* <Dashboard
             {...this.props}
@@ -175,46 +193,39 @@ export class Dapp extends React.Component {
             entity={this.entity}
           /> */}
           <Switch>
-            <Route
-              exact
-              path="/">
-            
-                <Dashboard
-                  // {...this.props}
-                  managerArr={this.managerArr}
-                  managerData={this.state.managerData}
-                  // entity={this.entity}
-                  key={0}
-                />
-              
-          
+            <Route exact path="/">
+              <Dashboard
+                enableResetScrollToCoords={false}
+                // {...this.props}
+                managerArr={this.managerArr}
+                managerData={this.state.managerData}
+                entityData={this.state.entityMap}
+                key={0}
+              />
             </Route>
-            <Route
-              path={"/royalties"} >
-                <Royalties
-                  {...this.props}
-                  managerArr={this.managerArr}
-                  managerData={this.state.managerData}
-                  entity={this.entity}
-                  key={1}
-                />
-
+            <Route path={"/royalties"}>
+              <Royalties
+                {...this.props}
+                managerArr={this.managerArr}
+                managerData={this.state.managerData}
+                entity={this.entity}
+                key={1}
+              />
             </Route>
-            <Route
-              path={"/licenses"} >
-                <ActiveLicenses
-                  {...this.props}
-                  managerArr={this.managerArr}
-                  managerData={this.state.managerData}
-                  entity={this.entity}
-                  key={2}
-                />
-              
+            <Route path={"/licenses"}>
+              <ActiveLicenses
+                {...this.props}
+                managerArr={this.managerArr}
+                managerData={this.state.managerData}
+                entity={this.entity}
+                entityData={this.state.entityMap}
+                key={2}
+              />
             </Route>
           </Switch>
           {/* <PrivateRoute path="/active-licenses" component={Dashboard} /> */}
           {/* <Redirect exact from="/" to="/" /> */}
-          <Footer fluid />
+          <Footer />
         </div>
         {/* </BrowserRouter> */}
       </div>

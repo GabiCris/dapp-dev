@@ -40,14 +40,15 @@ function transformData(managerData) {
       }
       transformedData[k].data.sort((a, b) => a.x - b.x);
       for (let i = 0; i < transformedData[k].data.length; i++) {
-        transformedData[k].data[i].x = transformedData[k].data[i].x;
-          // .toISOString()
-          // .slice(0, 10);
+        transformedData[k].data[i].x = transformedData[k].data[i].x
+          .toISOString()
+          .slice(0, 19)
+          .replace("T", " ");
       }
     }
     auxArr.sort((a, b) => a[0] - b[0]);
     for (let elem of auxArr) {
-      elem[0] = elem[0].toISOString().slice(0, 10);
+      elem[0] = elem[0].toISOString().slice(0, 19);
     }
     for (let i = 1; i < auxArr.length; i++) {
       if (auxArr[i][0] === auxArr[i - 1][0]) {
@@ -65,10 +66,10 @@ function transformData(managerData) {
     for (let i = 1; i < auxArr.length; i++) {
       auxArr[i][1] += auxArr[i - 1][1];
     }
-    transformedData.push({
-      id: "Timeline",
-      data: [],
-    });
+    // transformedData.push({
+    //   id: "Timeline",
+    //   data: [],
+    // });
     // for (let elem of auxArr) {
     //   transformedData[transformedData.length - 1].data.push({
     //     x: elem[0],
@@ -88,9 +89,9 @@ export const CumulativeRoyaltyGraph = ({ data /* see data tab */ }) => (
     colors={{ scheme: "dark2" }}
     xScale={{
       type: "time",
-      format: "%Y-%m-%d",
+      format: "%Y-%m-%d %H:%M:%S",
     }}
-    xFormat="time:%Y-%m-%d"
+    xFormat="time:%Y-%m-%d %H:%M:%S"
     yScale={{
       type: "linear",
       min: "0",
@@ -102,8 +103,9 @@ export const CumulativeRoyaltyGraph = ({ data /* see data tab */ }) => (
     axisRight={null}
     axisBottom={{
       orient: "bottom",
-      format: "%b %d",
-      legend: "Royalty Issue Date",
+      // format: "%m - %s",
+      format: "%H:%M",
+      legend: "Royalty Issue Time",
       legendOffset: 36,
       legendPosition: "middle",
     }}
@@ -117,7 +119,7 @@ export const CumulativeRoyaltyGraph = ({ data /* see data tab */ }) => (
       legendPosition: "middle",
     }}
     enableArea={true}
-    pointSize={10}
+    pointSize={0}
     pointColor={{ theme: "background" }}
     pointBorderWidth={2}
     pointBorderColor={{ from: "serieColor" }}

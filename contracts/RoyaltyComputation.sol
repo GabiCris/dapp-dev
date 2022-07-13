@@ -32,7 +32,8 @@ contract RoyaltyComputationContract is RoyaltyComputation, Ownable {
     AggregatorContract aggrContract;
     
     Royalty[] public royaltyHistory;
-
+    uint256[] hist;
+    uint256 expirationDate;
     //use times from the aggregator
     //initial time for royalties collection
     //uint256 collectionTime_start;
@@ -43,8 +44,19 @@ contract RoyaltyComputationContract is RoyaltyComputation, Ownable {
 
 
 
-    constructor(address _aggregator) {
+    constructor(address _aggregator, uint256 _expirationDate) {
         aggrContract = AggregatorContract(_aggregator);
+        expirationDate = _expirationDate;
+        
+        hist.push(1000 + expirationDate);
+        hist.push(block.timestamp + expirationDate);
+        hist.push(0);
+        hist.push(2500 + expirationDate);
+        hist.push(block.timestamp - 10000000 + expirationDate);
+        hist.push(1);
+        hist.push(500 + expirationDate);
+        hist.push(block.timestamp - 2000000 - expirationDate);
+        hist.push(1);
     }
 
     function computeRoyalties() public override{ computeRoyalties(block.timestamp);}

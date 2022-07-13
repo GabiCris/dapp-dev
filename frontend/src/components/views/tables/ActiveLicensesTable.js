@@ -20,8 +20,8 @@ class ActiveLicensesTable extends React.Component {
       transformedData.push([
         counter++,
         managerContr.managerAddress,
-        managerContr.licensee,
-        managerContr.licensor,
+        this.props.entityData[managerContr.licensee],
+        this.props.entityData[managerContr.licensor],
         managerContr.isActive ? "Active" : "Inactive",
       ]);
     }
