@@ -18,6 +18,7 @@ import PaymentIcon from "@material-ui/icons/Payment";
 import { RoyaltiesPaymentPie } from "./graphs/RoyaltiesPaymentPie.js";
 import { RoyaltySlGraphLine } from "./graphs/RoyaltySLGraphLine";
 import { CumulativeRoyaltyGraph } from "./graphs/CumulativeRoyaltyGraph";
+import { CumulativeUnpaidGraph } from "./graphs/CumulativeUnpaidGraph";
 
 export class Dashboard extends React.Component {
   constructor(props) {
@@ -189,14 +190,11 @@ export class Dashboard extends React.Component {
               <Col md="12">
                 <Card className="chart">
                   <CardHeader>
-                    <CardTitle tag="h5">Cumulative Royalties Payments</CardTitle>
-                    <p className="card-category">
-                      Grouped by Royalty Issue Date
-                    </p>
+                    <CardTitle tag="h5">Unpaid Royalties</CardTitle>
                   </CardHeader>
                   <CardBody style={{ height: 400 }}>
                     {/* <div style={{height: 200}}> */}
-                    <CumulativeRoyaltyGraph data={this.props.managerData} />
+                    <CumulativeUnpaidGraph data={this.props.managerData} />
                     {/* </div> */}
                   </CardBody>
                 </Card>

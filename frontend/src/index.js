@@ -4,7 +4,7 @@ import { Dapp } from "./Dapp";
 
 // We import bootstrap here, but you can remove if you want
 import "bootstrap/dist/css/bootstrap.css";
-import { BrowserRouter } from "react-router-dom";
+import { BrowserRouter, HashRouter } from "react-router-dom";
 
 import "./assets/scss/paper-dashboard.scss?v=1.2.0";
 import "./assets/demo/demo.css";
@@ -20,7 +20,7 @@ import { Redirect } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Switch>
         {/* <Route path="/login" component={Login} /> */}
         <PublicRoute path="/login" component={Login} />
@@ -29,7 +29,7 @@ ReactDOM.render(
         {/* <PrivateRoute path="/dashboard" component={Dapp} /> */}
         <Redirect exact from="/" to="/" />
       </Switch>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

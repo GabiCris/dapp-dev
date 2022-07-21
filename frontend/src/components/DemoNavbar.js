@@ -38,6 +38,7 @@ import {
 } from "reactstrap";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { removeUserSession } from "utils/Common";
+import Button from "@material-ui/core/Button";
 
 class DemoNavbar extends React.Component {
   constructor(props) {
@@ -122,17 +123,24 @@ class DemoNavbar extends React.Component {
       >
         <Container fluid>
           <div className="navbar-wrapper">
+            <a>
+              {this.props.userView === "0"
+                ? this.props.entityMap[this.props.token] === undefined
+                  ? " "
+                  : "View for Licensee: " +
+                    this.props.entityMap[this.props.token]
+                : this.props.entityMap[this.props.token] === undefined
+                ? " "
+                : "View for Licensor: " +
+                  this.props.entityMap[this.props.token]}
+            </a>
             <div className="navbar-toggle">
-              <button
+              <Button
                 type="button"
                 ref={this.sidebarToggle}
                 className="navbar-toggler"
                 onClick={() => this.openSidebar()}
-              >
-                <span className="navbar-toggler-bar bar1" />
-                <span className="navbar-toggler-bar bar2" />
-                <span className="navbar-toggler-bar bar3" />
-              </button>
+              ></Button>
             </div>
             <NavbarBrand href="/">{this.getBrand()}</NavbarBrand>
           </div>

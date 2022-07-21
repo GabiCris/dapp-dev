@@ -25,7 +25,7 @@ function transformData(managerData, entityData) {
         label: entityData[data.managerAddress],
         value: roy,
       });
-      console.log("data pie", data.managerAddress, entityData);
+      // console.log("data pie", data.managerAddress, entityData);
     }
   }
   return transformedData;

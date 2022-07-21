@@ -1,23 +1,6 @@
 import React from "react";
 import { ResponsiveLine } from "@nivo/line";
 
-let dataTemplate = [
-  {
-    id: "japan",
-    color: "hsl(259, 70%, 50%)",
-    data: [
-      {
-        x: "plane",
-        y: 1,
-      },
-      {
-        x: "helicopter",
-        y: 297,
-      },
-    ],
-  },
-];
-
 function transformData(managerData) {
   let transformedData = [];
   let auxArr = [];
@@ -78,7 +61,7 @@ function transformData(managerData) {
     // }
   }
 
-  console.log("auxarr after", transformedData);
+  // console.log("auxarr after", transformedData);
   return transformedData;
 }
 
@@ -108,6 +91,7 @@ export const CumulativeRoyaltyGraph = ({ data /* see data tab */ }) => (
       legend: "Royalty Issue Time",
       legendOffset: 36,
       legendPosition: "middle",
+      tickValues: 10,
     }}
     axisLeft={{
       orient: "left",

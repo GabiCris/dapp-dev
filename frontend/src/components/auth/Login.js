@@ -71,7 +71,7 @@ function Login(props) {
   // handle button click of login form
   const handleLogin = () => {
     setError(null);
-    setUserSession(username);
+    setUserSession(username, screenState);
     props.history.push("/");
   };
   const handleTabChange = (event, newValue) => {
@@ -105,14 +105,19 @@ function Login(props) {
                   value={screenState}
                   onChange={handleTabChange}
                 >
-                  <Tab label="Licensee" value={0} />
+                  <Tab
+                    label="Licensee"
+                    value={0}
+                    onClick={() => {
+                      setScreenState(0);
+                    }}
+                  />
                   <Tab
                     label="Licensor"
                     value={1}
-                    // onClick={() => {
-                    //   console.log(screenState);
-                    //   setScreenState(1);
-                    // }}
+                    onClick={() => {
+                      setScreenState(1);
+                    }}
                   />
                   {/* <Tab label="Financial" /> */}
                 </Tabs>

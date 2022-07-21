@@ -20,33 +20,25 @@ let dataTemplate = [
 
 function transformData(managerData) {
   let transformedData = [];
-  var months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+  let auxArr = [];
   if (managerData.length != 0) {
     for (let k = 0; k < managerData.length; k++) {
       transformedData.push({
         id: managerData[k].managerAddress,
         data: [],
       });
-
       for (let i = 0; i < managerData[k].royaltyData.length - 2; i = i + 3) {
-        // let month = months[new Date(managerData[k].royaltyData[i + 1] *1000).getMonth()];
-        transformedData[k].data.push({
-          x: new Date(managerData[k].royaltyData[i + 1] * 1000), //.toISOString().slice(0,10),
-          y: managerData[k].royaltyData[i],
-        });
+        if (managerData[k].royaltyData[i + 2] === 0) {
+          transformedData[k].data.push({
+            x: new Date(managerData[k].royaltyData[i + 1] * 1000), //.toISOString().slice(0,10),
+            y: managerData[k].royaltyData[i],
+          });
+
+          auxArr.push([
+            new Date(managerData[k].royaltyData[i + 1] * 1000),
+            managerData[k].royaltyData[i],
+          ]);
+        }
       }
       transformedData[k].data.sort((a, b) => a.x - b.x);
       for (let i = 0; i < transformedData[k].data.length; i++) {
@@ -56,20 +48,50 @@ function transformData(managerData) {
           .replace("T", " ");
       }
     }
+    auxArr.sort((a, b) => a[0] - b[0]);
+    for (let elem of auxArr) {
+      elem[0] = elem[0].toISOString().slice(0, 19);
+    }
+    for (let i = 1; i < auxArr.length; i++) {
+      if (auxArr[i][0] === auxArr[i - 1][0]) {
+        auxArr[i - 1][1] += auxArr[i][1];
+        auxArr.splice(i, 1);
+      }
+    }
+
+    for (let managerArr of transformedData) {
+      for (let i = 1; i < managerArr.data.length; i++) {
+        managerArr.data[i].y += managerArr.data[i - 1].y;
+      }
+    }
+
+    for (let i = 1; i < auxArr.length; i++) {
+      auxArr[i][1] += auxArr[i - 1][1];
+    }
+    // transformedData.push({
+    //   id: "Timeline",
+    //   data: [],
+    // });
+    // for (let elem of auxArr) {
+    //   transformedData[transformedData.length - 1].data.push({
+    //     x: elem[0],
+    //     y: elem[1],
+    //   });
+    // }
   }
-  // console.log("gr data", transformedData);
+
+  // console.log("auxarr after", transformedData);
   return transformedData;
 }
-export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
+
+export const CumulativeUnpaidGraph = ({ data /* see data tab */ }) => (
   <ResponsiveLine
     data={transformData(data)}
     margin={{ top: 10, right: 110, bottom: 50, left: 60 }}
-    // xScale={{ type: "point" }}
-    colors={{ scheme: 'dark2' }}
+    colors={{ scheme: "dark2" }}
     xScale={{
       type: "time",
       format: "%Y-%m-%d %H:%M:%S",
-      //  precision: "minute"
     }}
     xFormat="time:%Y-%m-%d %H:%M:%S"
     yScale={{
@@ -82,12 +104,12 @@ export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
     axisTop={null}
     axisRight={null}
     axisBottom={{
-      orient:'bottom',
+      orient: "bottom",
+      // format: "%m - %s",
       format: "%H:%M",
       legend: "Royalty Issue Time",
       legendOffset: 36,
       legendPosition: "middle",
-      tickValues: 7
     }}
     axisLeft={{
       orient: "left",
@@ -95,10 +117,10 @@ export const RoyaltySlGraphLine = ({ data /* see data tab */ }) => (
       tickPadding: 5,
       tickRotation: 0,
       legend: "Royalty Value (in $)",
-      legendOffset: -45,
+      legendOffset: -55,
       legendPosition: "middle",
     }}
-    // enableArea={true}
+    enableArea={true}
     pointSize={0}
     pointColor={{ theme: "background" }}
     pointBorderWidth={2}

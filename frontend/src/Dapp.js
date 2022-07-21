@@ -9,7 +9,7 @@ import Footer from "./components/Footer.js";
 import Sidebar from "./components/Sidebar.js";
 import DemoNavbar from "./components/DemoNavbar.js";
 import { ethers } from "ethers";
-import { getToken } from "utils/Common";
+import { getToken, getUserView } from "utils/Common";
 
 import ManagerArtifact from "contracts/ManagerContract.json";
 import EntityArtifact from "contracts/EntityContract.json";
@@ -32,6 +32,7 @@ export class Dapp extends React.Component {
     };
     this.mainPanel = React.createRef();
     this.token = getToken();
+    this.userView = getUserView();
   }
 
   componentDidMount() {
@@ -87,6 +88,15 @@ export class Dapp extends React.Component {
     );
     console.log("Entity contract:", this._entity);
 
+    if (this.userView === "0") {
+      this._initializeLicensee();
+    } else if (this.userView === "1") {
+      this._initializeLicensor();
+    }
+  }
+
+  async _initializeLicensor() {}
+  async _initializeLicensee() {
     const contractsArr = await this._entity.getActiveLicenseeSLs();
     console.log(
       "Associated Manager Contracts: ",
@@ -144,29 +154,31 @@ export class Dapp extends React.Component {
         let royaltyData = this._transformManagerLegacyData(
           await _manager.getRoyaltyHistoryLegacyDapp()
         );
+        // let ipId = await _manager.ipIdentifier();
         _managerData.push({
           managerAddress,
           licensee,
           licensor,
           isActive,
           royaltyData,
+          // ipId
         });
 
         // if (!this.state.entityMap.has(licensee)) {
-          let _entityLicensee = new ethers.Contract(
-            licensee,
-            EntityArtifact.abi,
-            this._provider.getSigner(0)
-          );
-          let _entityLicensor = new ethers.Contract(
-            licensor,
-            EntityArtifact.abi,
-            this._provider.getSigner(0)
-          );
-          let nameLicensor = await _entityLicensor.name();
-          let nameLicensee = await _entityLicensee.name();
-          _entityData[licensee] = nameLicensee;
-          _entityData[licensor] = nameLicensor;
+        let _entityLicensee = new ethers.Contract(
+          licensee,
+          EntityArtifact.abi,
+          this._provider.getSigner(0)
+        );
+        let _entityLicensor = new ethers.Contract(
+          licensor,
+          EntityArtifact.abi,
+          this._provider.getSigner(0)
+        );
+        let nameLicensor = await _entityLicensor.name();
+        let nameLicensee = await _entityLicensee.name();
+        _entityData[licensee] = nameLicensee;
+        _entityData[licensor] = nameLicensor;
         // }
       }
       console.log("Manager Data Arr:", _managerData);
@@ -182,9 +194,16 @@ export class Dapp extends React.Component {
           // {...this.props}
           bgColor={this.state.backgroundColor}
           activeColor={this.state.activeColor}
+          userView={this.userView}
+          entityMap={this.state.entityMap}
+          token={this.token}
         />
         <div className="main-panel" ref={this.mainPanel}>
-          <DemoNavbar />
+          <DemoNavbar
+            entityMap={this.state.entityMap}
+            token={this.token}
+            userView={this.userView}
+          />
 
           {/* <Dashboard
             {...this.props}
@@ -201,6 +220,7 @@ export class Dapp extends React.Component {
                 managerData={this.state.managerData}
                 entityData={this.state.entityMap}
                 key={0}
+                userView={this.userView}
               />
             </Route>
             <Route path={"/royalties"}>
@@ -210,6 +230,7 @@ export class Dapp extends React.Component {
                 managerData={this.state.managerData}
                 entity={this.entity}
                 key={1}
+                userView={this.userView}
               />
             </Route>
             <Route path={"/licenses"}>
@@ -220,6 +241,7 @@ export class Dapp extends React.Component {
                 entity={this.entity}
                 entityData={this.state.entityMap}
                 key={2}
+                userView={this.userView}
               />
             </Route>
           </Switch>

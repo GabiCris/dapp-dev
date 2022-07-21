@@ -60,7 +60,7 @@ class Sidebar extends React.Component {
     }
   }
   render() {
-    // console.log("SIdebar prop", this.props);
+    //  console.log("SIdebar prop", this.props);
     return (
       <div
         className="sidebar"
@@ -74,8 +74,9 @@ class Sidebar extends React.Component {
             </div>
           </a>
           <a className="simple-text logo-normal">
-            {this.props.appState === "0" ? "LICENSOR" : "LICENSEE"}
+            {this.props.userView === "1" ? "Licensor" : "LICENSEE"}
           </a>
+          {/* <p>{this.props.userView === "1" ? this.props.entityMap[this.props.token] : "LICENSEE"}</p> */}
         </div>
         <div className="sidebar-wrapper" ref={this.sidebar}>
           <Nav>
